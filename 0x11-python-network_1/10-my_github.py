@@ -1,14 +1,23 @@
 #!/usr/bin/python3
-"""Uses the GitHub API to display a GitHub ID based on given credentials.
-Usage: ./10-my_github.py <GitHub username> <GitHub password>
-  - Uses Basic Authentication to access the ID.
 """
-import sys
-import requests
-from requests.auth import HTTPBasicAuth
-
+Get the 10 most recent commits from the repository specified on
+the command line ordered most recent to oldest in the
+format: `<sha>: <author name>`
+"""
 
 if __name__ == "__main__":
-    auth = HTTPBasicAuth(sys.argv[1], sys.argv[2])
-    r = requests.get("https://api.github.com/user", auth=auth)
-    print(r.json().get("id"))
+    from requests import get
+    from sys import argv
+
+    url = 'https://api.github.com/repos/{}/{}/commits'.format(argv[2], argv[1])
+
+    try:
+        r = get(url)
+        j = r.json()
+        for commit in j[:10]:
+            print('{}: {}'.format(commit.get('sha'),
+                                  commit.get('commit')
+                                  .get('author')
+                                  .get('name')))
+    except IndexError as e:
+        print(e)

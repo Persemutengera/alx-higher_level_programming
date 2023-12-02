@@ -1,17 +1,15 @@
 #!/usr/bin/python3
-"""Sends a request to a given URL and displays the response body.
-Usage: ./7-error_code.py <URL>
-  - Handles HTTP errors.
-"""
-import sys
-import requests
-
+"""Take in URL and print content or status code on error"""
 
 if __name__ == "__main__":
-    url = sys.argv[1]
+    from requests import get
+    from sys import argv
 
-    r = requests.get(url)
-    if r.status_code >= 400:
-        print("Error code: {}".format(r.status_code))
-    else:
-        print(r.text)
+    try:
+        r = get(argv[1])
+        if r.status_code >= 400:
+            print('Error code: {}'.format(r.status_code))
+        else:
+            print(r.text)
+    except Exception as e:
+        print(e)
